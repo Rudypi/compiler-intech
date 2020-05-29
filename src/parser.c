@@ -83,8 +83,28 @@ bool parse_is_type (char *lexem)
 
 ast_t *parse_expression (buffer_t *buffer)
 {
-  // TODO
-  return NULL;
+  int  i = 0;
+  ast_t sortie = NULL;
+  stack_item_t *stack = stack_new_item(NULL);
+  for(;;){
+    if(i == NULL && stack_top(stack)==NULL){
+      exit(1);
+    }
+    else{
+      a =  stack_top(stack);
+      b = stack_pop(i);
+      if(a  ast_binary_priority() < b(prio)){
+        stack_push(stack, b);
+        i++;
+      }
+      else{
+        do{
+          ast_t sortie =  ast_list_add(sortie, stack_pop(stack));
+        } while(stack_top(stack)< ast_trucccccc(sortie));
+      }
+    }
+  }
+  return sortie;
 }
 
 /**
