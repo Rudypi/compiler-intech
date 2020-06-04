@@ -83,29 +83,48 @@ bool parse_is_type (char *lexem)
 
 ast_t *parse_expression (buffer_t *buffer)
 {
-  int  i = 0;
-  ast_t sortie = NULL;
-  stack_item_t *stack = stack_new_item(NULL);
-  for(;;){
-    if(i == NULL && stack_top(stack)==NULL){
+  mystack_t sortie = NULL;
+  mystack_t *stack = stack_new_item(NULL);
+
+  buf_skipblank(buffer);//Debut de chaine
+  stack_push(&stack, (char *)'\0'); //Init stack
+
+  for(;;) // for all the file
+  {
+    if(buf_getchar_rollback(buffer) == '\0' && stack_top(stack)=='\0'){
+      printf('Exiting');
       exit(1);
     }
     else{
-      a =  stack_top(stack);
-      b = stack_pop(i);
-      if(a  ast_binary_priority() < b(prio)){
-        stack_push(stack, b);
-        i++;
+      char *a = stack_top(stack);
+      char *b = buf_getchar_rollback(buffer);
+      
+      if(ast_binary_priority(a) < ast_binary_priority(b)){
+        stack_push(&stack, b);
+        buf_forward(buffer, 1); // next symbol
       }
       else{
         do{
-          ast_t sortie =  ast_list_add(sortie, stack_pop(stack));
-        } while(stack_top(stack)< ast_trucccccc(sortie));
+          char *temp = stack_pop(&stack);  //get   the top of the stack
+          ast_t *out =  charConvertor(temp);
+          stack_push(&sortie, out);
+
+          if (stack_top(stack))
+          {
+            char ch = *(char *)stack_top(stack);
+            if ((ch != '\0') && ch != ' ')
+            {
+              int compare = stack_top(stack) <= temp;
+            }
+            else
+              int compare = 0;
+          }
+
+        } while(ast_binary_priority(a) > ast_binary_priority(b)); // while a priority is greater than b 
       }
     }
   }
   return sortie;
-  // revoir tout ca pour le  05/06
 }
 
 /**
