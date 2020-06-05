@@ -92,10 +92,21 @@ bool parse_is_type (char *lexem)
 ast_t *parse_expression_next_symbol(buffer_t *buffer, symbol_t **table) {
   // cette fonction doit deviner, grâce à buf_getchar, ou lexer_getalphanum, ou lexer_getop (à coder)
   // quel est le type de symbole qui est actuellement à lire
+  char next = buf_getchar(buffer);
+  
+
+   if (isnbr(next))  // si c'est un chiffre
+  {
+    long tmp;
+    sscanf(&next, "%ld", &tmp);
+    return ast_new_integer(tmp);
+  }
+  else if (ast_binary_to_string(next)){ // sinon si c'est un des  caractères de la liste de string
+    return ast_new_binary(, NULL, NULL); // retourner un aast mais avec quel param ?
+  }
   // elle doit retourner l'ast_t correspondant à ce symbole
   // il n'est pas exclu de devoir rajouter des paramètres à cette fonction permettant par exemple de lui indiquer quels sont les types d'ast qui sont
   // autorisés à ce moment de la lecture (ex: une opérande après avoir lu un opérateur, ex pas de fin d'expression juste après un opérateur, etc.)
-  return NULL; // TODO
 }
 
 ast_t *pile_vers_arbre (mystack_t *pile)
@@ -138,7 +149,9 @@ ast_t *parse_expression (buffer_t *buffer, symbol_t **table)
 //          empiler b dans pile
         stack_push(&pile, b);
 //          avancer i sur le symbole suivant
+
         // TODO: lire le prochain symbole
+        parse_expression_next_symbol(buffer, &pile); // la table c'est la pile ??
       }
 //        sinon
       else {
@@ -152,7 +165,7 @@ ast_t *parse_expression (buffer_t *buffer, symbol_t **table)
       }
     }
   }
-  return NULL;
+  return NULL; // pile_vers_arbre(sortie); renvoyer sortie sous nforme d'arbre??
 }
 
 /**
